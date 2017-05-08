@@ -84,6 +84,7 @@ class Dfinder : public edm::EDAnalyzer
         double tkEtaCut_;
         std::vector<double> dPtCut_;
         std::vector<double> dEtaCut_;
+        std::vector<double> dRapidityCut_;
         std::vector<double> VtxChiProbCut_;
         std::vector<double> dCutSeparating_PtVal_;
         std::vector<double> tktkRes_svpvDistanceCut_lowptD_;
@@ -159,6 +160,7 @@ Dfinder::Dfinder(const edm::ParameterSet& iConfig):theConfig(iConfig)
     tkEtaCut_ = iConfig.getParameter<double>("tkEtaCut");
     dPtCut_ = iConfig.getParameter<std::vector<double> >("dPtCut");
     dEtaCut_ = iConfig.getParameter<std::vector<double> >("dEtaCut");
+    dRapidityCut_ = iConfig.getParameter<std::vector<double> >("dRapidityCut");
     VtxChiProbCut_ = iConfig.getParameter<std::vector<double> >("VtxChiProbCut");
     dCutSeparating_PtVal_ = iConfig.getParameter<std::vector<double> >("dCutSeparating_PtVal");
     tktkRes_svpvDistanceCut_lowptD_ = iConfig.getParameter<std::vector<double> >("tktkRes_svpvDistanceCut_lowptD");
@@ -195,7 +197,7 @@ Dfinder::~Dfinder()
 void Dfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
    //checking input parameter size
-    if( (Dchannel_.size() != dPtCut_.size()) || (dPtCut_.size() != dEtaCut_.size()) || (dEtaCut_.size() != VtxChiProbCut_.size()) || (VtxChiProbCut_.size() != tktkRes_svpvDistanceCut_lowptD_.size()) || (tktkRes_svpvDistanceCut_lowptD_.size() != tktkRes_svpvDistanceCut_highptD_.size()) || (tktkRes_svpvDistanceCut_highptD_.size() != svpvDistanceCut_lowptD_.size()) || (svpvDistanceCut_lowptD_.size() != svpvDistanceCut_highptD_.size()) || (svpvDistanceCut_highptD_.size() != MaxDocaCut_.size()) || (MaxDocaCut_.size() != alphaCut_.size()) || (alphaCut_.size() != tktkRes_alphaCut_.size())){
+  if( (Dchannel_.size() != dPtCut_.size()) || (dPtCut_.size() != dEtaCut_.size()) || (dRapidityCut_.size() != dEtaCut_.size()) || (dEtaCut_.size() != VtxChiProbCut_.size()) || (VtxChiProbCut_.size() != tktkRes_svpvDistanceCut_lowptD_.size()) || (tktkRes_svpvDistanceCut_lowptD_.size() != tktkRes_svpvDistanceCut_highptD_.size()) || (tktkRes_svpvDistanceCut_highptD_.size() != svpvDistanceCut_lowptD_.size()) || (svpvDistanceCut_lowptD_.size() != svpvDistanceCut_highptD_.size()) || (svpvDistanceCut_highptD_.size() != MaxDocaCut_.size()) || (MaxDocaCut_.size() != alphaCut_.size()) || (alphaCut_.size() != tktkRes_alphaCut_.size())){
         std::cout<<"Unmatched input parameter vector size, EXIT"<<std::endl;
         return;
     }
@@ -1221,6 +1223,7 @@ void Dfinder::TkCombinationPermutation(
                 if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                 DMassCutLevel[Dchannel_number-1]->Fill(1);
                 //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+		if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                 DMassCutLevel[Dchannel_number-1]->Fill(2);
                 selectedTkhidx.push_back(tk1_hindex);
                 selectedTkhidx.push_back(tk2_hindex);
@@ -1251,6 +1254,7 @@ void Dfinder::TkCombinationPermutation(
                     if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                     DMassCutLevel[Dchannel_number-1]->Fill(1);
                     //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+		    if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                     DMassCutLevel[Dchannel_number-1]->Fill(2);
                     selectedTkhidx.push_back(tk1_hindex);
                     selectedTkhidx.push_back(tk2_hindex);
@@ -1283,6 +1287,7 @@ void Dfinder::TkCombinationPermutation(
                         if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                         DMassCutLevel[Dchannel_number-1]->Fill(1);
                         //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+			if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                         DMassCutLevel[Dchannel_number-1]->Fill(2);
                         selectedTkhidx.push_back(tk1_hindex);
                         selectedTkhidx.push_back(tk2_hindex);
@@ -1317,6 +1322,7 @@ void Dfinder::TkCombinationPermutation(
                             if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                             DMassCutLevel[Dchannel_number-1]->Fill(1);
                             //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+			    if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                             DMassCutLevel[Dchannel_number-1]->Fill(2);
                             selectedTkhidx.push_back(tk1_hindex);
                             selectedTkhidx.push_back(tk2_hindex);
@@ -1386,6 +1392,7 @@ void Dfinder::TkCombinationResFast(
                 if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                 DMassCutLevel[Dchannel_number-1]->Fill(1);
                 //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+                if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                 DMassCutLevel[Dchannel_number-1]->Fill(2);
                 selectedTkhidx.push_back(tk1_hindex);
                 selectedTkhidx.push_back(tk2_hindex);
@@ -1413,6 +1420,7 @@ void Dfinder::TkCombinationResFast(
                     if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                     DMassCutLevel[Dchannel_number-1]->Fill(1);
                     //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+		    if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                     DMassCutLevel[Dchannel_number-1]->Fill(2);
                     selectedTkhidx.push_back(tk1_hindex);
                     selectedTkhidx.push_back(tk2_hindex);
@@ -1442,6 +1450,7 @@ void Dfinder::TkCombinationResFast(
                         if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                         DMassCutLevel[Dchannel_number-1]->Fill(1);
                         //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+			if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                         DMassCutLevel[Dchannel_number-1]->Fill(2);
                         selectedTkhidx.push_back(tk1_hindex);
                         selectedTkhidx.push_back(tk2_hindex);
@@ -1470,6 +1479,7 @@ void Dfinder::TkCombinationResFast(
                             if(v4_D.Pt() < dPtCut_[Dchannel_number-1])continue;
                             DMassCutLevel[Dchannel_number-1]->Fill(1);
                             //if(fabs(v4_D.Eta()) > dEtaCut_[Dchannel_number-1])continue;
+			    if(fabs(v4_D.Rapidity()) > dRapidityCut_[Dchannel_number-1])continue;
                             DMassCutLevel[Dchannel_number-1]->Fill(2);
                             selectedTkhidx.push_back(tk1_hindex);
                             selectedTkhidx.push_back(tk2_hindex);
