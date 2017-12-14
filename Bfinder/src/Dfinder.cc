@@ -876,6 +876,9 @@ void Dfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         TrackInfo.d0error        [TrackInfo.size] = tk_it->track()->d0Error();
                         TrackInfo.dzPV           [TrackInfo.size] = tk_it->track()->dz(RefVtx);
                         TrackInfo.dxyPV          [TrackInfo.size] = tk_it->track()->dxy(RefVtx);
+                        TrackInfo.dxyErr         [TrackInfo.size] = tk_it->track()->dxyError();
+                        TrackInfo.dszPV          [TrackInfo.size] = tk_it->track()->dsz(RefVtx);
+                        TrackInfo.dszErr         [TrackInfo.size] = tk_it->track()->dszError();
                         TrackInfo.highPurity     [TrackInfo.size] = tk_it->track()->quality(reco::TrackBase::highPurity);
                         TrackInfo.geninfo_index  [TrackInfo.size] = -1;//initialize for later use
                         if(MVAMapLabelInputTag_.instance() == "MVAVals") 

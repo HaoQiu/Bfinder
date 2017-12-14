@@ -515,6 +515,9 @@ class TrackInfoBranches{//{{{
         float	d0error      [ MAX_TRACK];
         float	dzPV         [ MAX_TRACK];
         float	dxyPV        [ MAX_TRACK];
+        float   dxyErr       [ MAX_TRACK];
+        float   dszPV        [ MAX_TRACK];
+        float   dszErr       [ MAX_TRACK];
         int     geninfo_index[ MAX_TRACK];
         int     trackQuality [ MAX_TRACK];
         bool    highPurity   [ MAX_TRACK];
@@ -546,6 +549,9 @@ class TrackInfoBranches{//{{{
             root->Branch("TrackInfo.d0error"	    ,d0error	    ,"TrackInfo.d0error[TrackInfo.size]/F"	);
             root->Branch("TrackInfo.dzPV"           ,dzPV           ,"TrackInfo.dzPV[TrackInfo.size]/F"		);
             root->Branch("TrackInfo.dxyPV"          ,dxyPV          ,"TrackInfo.dxyPV[TrackInfo.size]/F"		);
+            root->Branch("TrackInfo.dxyErr"         ,dxyErr         ,"TrackInfo.dxyErr[TrackInfo.size]/F"               );
+            root->Branch("TrackInfo.dszPV"          ,dszPV          ,"TrackInfo.dszPV[TrackInfo.size]/F"                );
+            root->Branch("TrackInfo.dszErr"         ,dszErr         ,"TrackInfo.dszErr[TrackInfo.size]/F"               );
             root->Branch("TrackInfo.geninfo_index"  ,geninfo_index  ,"TrackInfo.geninfo_index[TrackInfo.size]/I");
             root->Branch("TrackInfo.trackQuality"   ,trackQuality   ,"TrackInfo.trackQuality[TrackInfo.size]/I");
             root->Branch("TrackInfo.highPurity"     ,highPurity     ,"TrackInfo.highPurity[TrackInfo.size]/O");
@@ -581,6 +587,9 @@ class TrackInfoBranches{//{{{
             root->SetBranchAddress("TrackInfo.d0error"       , d0error     );
             root->SetBranchAddress("TrackInfo.dzPV"          , dzPV        );
             root->SetBranchAddress("TrackInfo.dxyPV"         , dxyPV       );
+            root->SetBranchAddress("TrackInfo.dxyErr"        , dxyErr      );
+            root->SetBranchAddress("TrackInfo.dszPV"         , dszPV       );
+            root->SetBranchAddress("TrackInfo.dszErr"        , dszErr      );
             root->SetBranchAddress("TrackInfo.geninfo_index" , geninfo_index  );
             root->SetBranchAddress("TrackInfo.trackQuality"  , trackQuality  );
             root->SetBranchAddress("TrackInfo.highPurity"    , highPurity  );
