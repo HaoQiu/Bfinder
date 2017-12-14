@@ -706,7 +706,6 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         TrackCutLevel->Fill(4);
                         if(doTkPreCut_){
                             if( !(tk_it->track()->quality(reco::TrackBase::highPurity))) continue;
-
                             //outdated selections
                             //if (tk_it->track()->normalizedChi2()>5)             continue;
                             //if (tk_it->p()>200 || tk_it->pt()>200)              continue;
