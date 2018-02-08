@@ -88,7 +88,7 @@ def finderMaker_75X(process, AddCaloMuon = False, runOnMC = True, HIFormat = Fal
 	switchOffAmbiguityResolution(process) # Switch off ambiguity resolution: allow multiple reco muons to match to the same trigger muon
 	addHLTL1Passthrough(process)
 
-	process.patTrigger.collections.remove("hltL3MuonCandidates")
+#	process.patTrigger.collections.remove("hltL3MuonCandidates")
 	process.patTrigger.collections.append("hltHIL3MuonCandidates")
 
 	process.muonL1Info.maxDeltaR = 0.3
@@ -223,8 +223,10 @@ def finderMaker_75X(process, AddCaloMuon = False, runOnMC = True, HIFormat = Fal
 	    doTkPreCut = cms.bool(True),
 	    makeDntuple = cms.bool(True),
 	    doDntupleSkim = cms.bool(False),
-        printInfo = cms.bool(True),
+	    printInfo = cms.bool(True),
 	    readDedx = cms.bool(True),
+	    MCMatchOnly = cms.bool(False),
+	    noDfinderTrees = cms.bool(False),
 	)
 	if runOnMC:
 	    process.Bfinder.RunOnMC = cms.bool(True)
