@@ -627,7 +627,7 @@ class DntupleBranches
     nt->Branch("GRestk4phi",GRestk4phi,"GRestk4phi[Gsize]/F");
   }
   
-  void makeDNtuple(int isDchannel[], bool REAL, bool skim, EvtInfoBranches *EvtInfo, VtxInfoBranches *VtxInfo, TrackInfoBranches *TrackInfo, DInfoBranches *DInfo, GenInfoBranches *GenInfo, TTree* ntD1, TTree* ntD2, TTree* ntD3, TTree* ntD4, TTree* ntD5, TTree* ntD6, TTree* ntD7)
+  void makeDNtuple(int isDchannel[], bool REAL, bool skim, bool MCMatchOnly_, EvtInfoBranches *EvtInfo, VtxInfoBranches *VtxInfo, TrackInfoBranches *TrackInfo, DInfoBranches *DInfo, GenInfoBranches *GenInfo, TTree* ntD1, TTree* ntD2, TTree* ntD3, TTree* ntD4, TTree* ntD5, TTree* ntD6, TTree* ntD7)
   {//{{{
     TVector3* bP = new TVector3;
     TVector3* bVtx = new TVector3;
@@ -658,8 +658,7 @@ class DntupleBranches
                   }
                 if(DInfo->type[j]==(t+1))
                   {
-                    fillDTree(bP,bVtx,b4P,j,Dtypesize[t/2],REAL,EvtInfo,VtxInfo,TrackInfo,DInfo,GenInfo);
-                    Dtypesize[t/2]++;
+                    fillDTree(bP,bVtx,b4P,j,Dtypesize[t/2],REAL,MCMatchOnly_,EvtInfo,VtxInfo,TrackInfo,DInfo,GenInfo);
                   }
               }
             if(t==1)       ntD1->Fill();
@@ -881,11 +880,8 @@ class DntupleBranches
     BSWidthYErr = EvtInfo->BSWidthYErr;
   }
 
-  void fillDTree(TVector3* bP, TVector3* bVtx, TLorentzVector* b4P, int j, int typesize, bool REAL, EvtInfoBranches *EvtInfo, VtxInfoBranches *VtxInfo, TrackInfoBranches *TrackInfo, DInfoBranches *DInfo, GenInfoBranches *GenInfo)
+  void fillDTree(TVector3* bP, TVector3* bVtx, TLorentzVector* b4P, int j, int &typesize, bool REAL, bool MCMatchOnly, EvtInfoBranches *EvtInfo, VtxInfoBranches *VtxInfo, TrackInfoBranches *TrackInfo, DInfoBranches *DInfo, GenInfoBranches *GenInfo)
   {
-    //EvtInfo
-    Dsize = typesize+1;
-    
     //DInfo
     bP->SetPtEtaPhi(DInfo->pt[j],DInfo->eta[j]*0,DInfo->phi[j]);
     bVtx->SetXYZ(DInfo->vtxX[j]-EvtInfo->PVx,
@@ -1911,6 +1907,13 @@ class DntupleBranches
               }
           }
       }//if(!real)
+
+    if(!MCMatchOnly || dGenIdxRes>=0)
+      {
+	typesize++;
+	Dsize = typesize;
+      }
+
   }//fillDtree
   
   int findBAncestor(int j, GenInfoBranches *GenInfo)

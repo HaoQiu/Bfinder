@@ -107,6 +107,8 @@ class Dfinder : public edm::EDAnalyzer
         bool doDntupleSkim_;
         bool printInfo_;
         bool readDedx_;
+        bool MCMatchOnly_;
+        bool noDfinderTrees_;
         edm::EDGetTokenT<edm::ValueMap<float> > MVAMapLabel_;
         edm::EDGetTokenT< std::vector<float> > MVAMapLabelpA_;
         edm::InputTag MVAMapLabelInputTag_;
@@ -148,11 +150,14 @@ void Dfinder::beginJob()
     ntD6 = fs->make<TTree>("ntDD0kpipipipi","");   Dntuple->buildDBranch(ntD6);
     ntD7 = fs->make<TTree>("ntBptoD0pi","");       Dntuple->buildDBranch(ntD7);
     ntGen = fs->make<TTree>("ntGen","");           Dntuple->buildGenBranch(ntGen);
-    EvtInfo.regTree(root);
-    VtxInfo.regTree(root);
-    TrackInfo.regTree(root, detailMode_);
-    DInfo.regTree(root, detailMode_);
-    GenInfo.regTree(root);
+    if(!noDfinderTrees_)
+      {
+	EvtInfo.regTree(root);
+	VtxInfo.regTree(root);
+	TrackInfo.regTree(root, detailMode_);
+	DInfo.regTree(root, detailMode_);
+	GenInfo.regTree(root);
+      }
 }//}}}
 
 Dfinder::Dfinder(const edm::ParameterSet& iConfig):theConfig(iConfig)
@@ -193,6 +198,8 @@ Dfinder::Dfinder(const edm::ParameterSet& iConfig):theConfig(iConfig)
     doDntupleSkim_ = iConfig.getParameter<bool>("doDntupleSkim");
     printInfo_ = iConfig.getParameter<bool>("printInfo");
     readDedx_ = iConfig.getParameter<bool>("readDedx");
+    MCMatchOnly_ = iConfig.getParameter<bool>("MCMatchOnly")&&RunOnMC_;
+    noDfinderTrees_ = iConfig.getParameter<bool>("noDfinderTrees");
     MVAMapLabelInputTag_ = iConfig.getParameter<edm::InputTag>("MVAMapLabel");
     MVAMapLabel_ = consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("MVAMapLabel"));
     MVAMapLabelpA_ = consumes< std::vector<float> >(iConfig.getParameter<edm::InputTag>("MVAMapLabel"));
@@ -1187,7 +1194,7 @@ void Dfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         isDchannel[12] = 1; //B+(D0(k-pi+)pi+)
         isDchannel[13] = 1; //B-(D0(k-pi+)pi-)
         bool REAL = ((!iEvent.isRealData() && RunOnMC_) ? false:true);
-        Dntuple->makeDNtuple(isDchannel, REAL, doDntupleSkim_, &EvtInfo, &VtxInfo, &TrackInfo, &DInfo, &GenInfo, ntD1, ntD2, ntD3, ntD4, ntD5, ntD6, ntD7);
+        Dntuple->makeDNtuple(isDchannel, REAL, doDntupleSkim_, MCMatchOnly_, &EvtInfo, &VtxInfo, &TrackInfo, &DInfo, &GenInfo, ntD1, ntD2, ntD3, ntD4, ntD5, ntD6, ntD7);
         if(!REAL) Dntuple->fillDGenTree(ntGen, &GenInfo);
     }
 
